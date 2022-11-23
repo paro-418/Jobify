@@ -44,8 +44,23 @@ const start = async () => {
       });
     }
 
-    app.listen(port, () => {
+    const server = app.listen(port, () => {
       console.log(`Server is listening on ${port}...`);
+    });
+
+    process.on('unhandledRejection', (err) => {
+      console.log('UNCAUGHT REJECTION...');
+      console.log(err);
+      server.close(() => {
+        process.exit(1);
+      });
+    });
+    process.on('uncaughtException', (err) => {
+      console.log('UNCAUGHT EXCEPTION...');
+      console.log(err);
+      server.close(() => {
+        process.exit(1);
+      });
     });
   } catch (err) {
     console.log(err);
